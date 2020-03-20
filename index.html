@@ -1,0 +1,39 @@
+<html>
+
+<head>
+  <style>
+    body {
+      background-color: #333;
+      color: white;
+      font-family: Helvetica;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    p {
+      padding: 4em;
+      text-align: center;
+    }
+
+    a,
+    a:visited {
+      color: #80b1d3;
+      text-decoration: none;
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="confirmed"></canvas>
+  <canvas id="rate"></canvas>
+  <p>
+    Percent of new cases in comparison to previous day. Note: these numbers are a total of positive reported cases, so they may be affected by rate of testing and results.
+  </p>
+  <canvas id="recovery"></canvas>
+  <p style="float: right"><a href="https://github.com/pomber/covid19">Data Source available here</a></p>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-colorschemes"></script>
+  <script src="script.js"></script>
+</body>
+
+</html>

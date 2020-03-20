@@ -61,9 +61,10 @@ function getDatasets(data, fn, countries, fill, population) {
   return datasets;
 }
 
-var confirmed_cvs = document.getElementById("confirmed").getContext("2d");
+// var confirmed_cvs = document.getElementById("confirmed").getContext("2d");
 var rate_cvs = document.getElementById("rate").getContext("2d");
-var recovery_cvs = document.getElementById("recovery").getContext("2d");
+var recovery_cvs = document.getElementById("recovery-per-capita").getContext("2d");
+var recovery = document.getElementById("recovery").getContext("2d");
 
 var countries = [
   "US",
@@ -96,15 +97,11 @@ var population = [
 ];
 
 var config = {
-  // The type of chart we want to create
   type: "line",
-
-  // The data for our dataset
   data: {
     datasets: null,
     labels: null
   },
-  // Configuration options go here
   options: {
     responsive: true,
     plugins: {
@@ -118,7 +115,7 @@ var config = {
     title: {
       display: true,
       fontColor: "white",
-      text: "Corona Virus Confirmed Cases (per Capita)"
+      text: "Corona Virus Confirmed Cases (per capita)"
     },
     tooltips: {
       mode: "index",
@@ -131,7 +128,7 @@ var config = {
           scaleLabel: {
             display: true,
             fontColor: "white",
-            labelString: "Days since 25 confirmed"
+            labelString: "Days Since 25 Confirmed"
           }
         }
       ],
@@ -141,7 +138,7 @@ var config = {
           scaleLabel: {
             display: true,
             fontColor: "white",
-            labelString: "Confirmed per capita"
+            labelString: "Confirmed (per capita)"
           },
           ticks: {}
         }
@@ -163,11 +160,9 @@ fetch("https://pomber.github.io/covid19/timeseries.json")
       false,
       population
     );
-    cconfig.data.labels = labels;
-    var chartc = new Chart(confirmed_cvs, cconfig);
 
     cconfig = JSON.parse(JSON.stringify(config));
-    cconfig.options.title.text = "Corona infection rate comparison";
+    cconfig.options.title.text = "Corona Virus Infection Rate Comparison";
     cconfig.options.scales.yAxes[0].scaleLabel.labelString =
       "Confirmed today/yesterday";
     cconfig.options.scales.yAxes[0].ticks.min = 0;
@@ -179,9 +174,9 @@ fetch("https://pomber.github.io/covid19/timeseries.json")
     var chartr = new Chart(rate_cvs, cconfig);
 
     cconfig = JSON.parse(JSON.stringify(config));
-    cconfig.options.title.text = "Corona infected comparison";
+    cconfig.options.title.text = "Active Cases Comparison (per capita)";
     cconfig.options.scales.yAxes[0].scaleLabel.labelString =
-      "Confirmed - recovered - dead per capita";
+      "Active Cases (per capita)";
     cconfig.data.datasets = getDatasets(
       data,
       getInfected,
@@ -191,4 +186,17 @@ fetch("https://pomber.github.io/covid19/timeseries.json")
     );
     cconfig.data.labels = labels;
     var chartrc = new Chart(recovery_cvs, cconfig);
+
+    cconfig = JSON.parse(JSON.stringify(config));
+    cconfig.options.title.text = "Active Cases Comparison (total per country)";
+    cconfig.options.scales.yAxes[0].scaleLabel.labelString =
+      "Total Active Cases";
+    cconfig.data.datasets = getDatasets(
+      data,
+      getInfected,
+      countries,
+      false
+    );
+    cconfig.data.labels = labels;
+    var chartrc = new Chart(recovery, cconfig);
   });

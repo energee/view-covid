@@ -4,15 +4,15 @@ var labels = [];
 var state_labels = [];
 var days = {};
 
-function getDays(data, country) {
+function getDays(data, countries) {
   var confirmed = [];
-  for (var day of data[country]) {
+  for (var day of data[countries]) {
     if (day["confirmed"] < 25) continue;
     confirmed.push(day["confirmed"]);
 
     if (confirmed.length > labels.length) labels.push(labels.length);
   }
-  days[country] = confirmed;
+  days[countries] = confirmed;
   return confirmed;
 }
 
@@ -32,7 +32,7 @@ function getInfected(data, country) {
   var infected = [];
   for (var day of data[country]) {
     if (day["confirmed"] < 25) continue;
-    infected.push(day["confirmed"] - day["deaths"] - day["recovered"]);
+    infected.push(day["confirmed"] - day["deaths"]);
   }
   return infected;
 }
@@ -78,7 +78,7 @@ function getDatasets(data, fn, countries, fill, population) {
 var rate_cvs = document.getElementById("rate").getContext("2d");
 var recovery_cvs = document.getElementById("recovery-per-capita").getContext("2d");
 var recovery = document.getElementById("recovery").getContext("2d");
-var state = document.getElementById("states").getContext("2d");
+// var state = document.getElementById("states").getContext("2d");
 
 var countries = [
   "US",
@@ -109,9 +109,22 @@ var states = [
   "Connecticut",
   "Pennsylvania",
   "North Carolina",
-  "Massachusetts",
-  // "Colorado",
+  "Massachusetts"
 ];
+
+// Quick hack to allow State, country override
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+let statesQuery = urlParams.get('states');
+let countriesQuery = urlParams.get('countries');
+if (statesQuery) {
+  let statesArray = statesQuery.split(',');
+  states = statesArray;
+}
+if (countriesQuery) {
+  let countriesArray = countriesQuery.split(',');
+  countries = countriesArray;
+}
 
 var config = {
   type: "line",
@@ -190,9 +203,9 @@ fetch("https://pomber.github.io/covid19/timeseries.json")
     var chartr = new Chart(rate_cvs, cconfig);
 
     cconfig = JSON.parse(JSON.stringify(config));
-    cconfig.options.title.text = "Active Cases Comparison (per capita)";
+    cconfig.options.title.text = "Total Cases Comparison (per capita)";
     cconfig.options.scales.yAxes[0].scaleLabel.labelString =
-      "Active Cases (per capita)";
+      "Total Cases (per capita)";
     cconfig.data.datasets = getDatasets(
       data,
       getInfected,
@@ -204,9 +217,9 @@ fetch("https://pomber.github.io/covid19/timeseries.json")
     var chartrc = new Chart(recovery_cvs, cconfig);
 
     cconfig = JSON.parse(JSON.stringify(config));
-    cconfig.options.title.text = "Active Cases Comparison (total per country)";
+    cconfig.options.title.text = "Total Cases Comparison (total per country)";
     cconfig.options.scales.yAxes[0].scaleLabel.labelString =
-      "Total Active Cases";
+      "Total Cases";
     cconfig.data.datasets = getDatasets(
       data,
       getInfected,
@@ -219,24 +232,24 @@ fetch("https://pomber.github.io/covid19/timeseries.json")
   }
 );
 
-fetch("https://titaniumbones.github.io/covid19/provinces-US.json")
-  .then(response => {
-    return response.json();
-  })
-  .then(state_data => {
-    var cconfig = JSON.parse(JSON.stringify(config));
-    cconfig.data.datasets = getDatasets(
-      state_data,
-      getDaysStates,
-      states,
-      false
-    );
-    cconfig.options.title.text = "Active Cases per state";
-    cconfig.options.scales.yAxes[0].scaleLabel.labelString =
-      "Total Active Cases per State";
-    cconfig.options.scales.xAxes[0].scaleLabel.labelString =
-        "Days Since 5 Confirmed";
-    cconfig.data.labels = state_labels;
-    var chartrc = new Chart(state, cconfig);
-  }
-);
+// fetch("https://titaniumbones.github.io/covid19/provinces-US.json")
+//   .then(response => {
+//     return response.json();
+//   })
+//   .then(state_data => {
+//     var cconfig = JSON.parse(JSON.stringify(config));
+//     cconfig.data.datasets = getDatasets(
+//       state_data,
+//       getDaysStates,
+//       states,
+//       false
+//     );
+//     cconfig.options.title.text = "Total Cases per state";
+//     cconfig.options.scales.yAxes[0].scaleLabel.labelString =
+//       "Total Cases per State";
+//     cconfig.options.scales.xAxes[0].scaleLabel.labelString =
+//         "Days Since 5 Confirmed";
+//     cconfig.data.labels = state_labels;
+//     var chartrc = new Chart(state, cconfig);
+//   }
+// );

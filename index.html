@@ -44,7 +44,7 @@
   <p style="font-size: 1.6em; max-width: 1200px; margin: 0 auto">The charts that I found online were tracking totals, but this does not help to understand the amount of cases based on population or the number of cases vs the previous day. I created these charts to visualize growth from previous day, compare cases between countries, with an example showing recoveries on a per-capita basis and actual totals.
     <br><br>
   </p>
-  <p style="font-size: 1.2em">Time scales are offset based on first day that 25 or greater are confirmed in a given country.</p>
+  <p style="font-size: 1.2em; color: yellow">Update March 25th: Active case charts have been removed since JHU is no longer providing recovered cases.</p>
   <br><br>
   <p>Charts can be manipulated by toggling their respective countries above the charts.</p>
   <canvas id="rate"></canvas>
@@ -53,6 +53,7 @@
     Percent of new cases in comparison to previous day. Note: these numbers are a total of positive reported cases, so they may be affected by rate of testing and results.
   </p>
   <canvas id="recovery"></canvas>
+  <p style="color: red; margin-top: 5em">Removed state chart until a better data source is available.</p>
   <canvas id="states"></canvas>
   <p><em>Data is updated 3 times per day</em></p>
   <p style="float: right">Code available on <a href="https://github.com/energee/corona-virus">Github</a> - <a href="https://github.com/pomber/covid19">Data Source available here</a></p>

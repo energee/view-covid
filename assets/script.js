@@ -4,7 +4,7 @@ var labels = [];
 var state_labels = [];
 var days = {};
 
-function getDays(data, country, population) {
+function getDays(data, country) {
   var confirmed = [];
   for (var day of data[country]) {
     if (day["confirmed"] < 25) continue;
@@ -64,9 +64,9 @@ function getDatasets(data, fn, countries, fill, population) {
       data: fn(data, countries[i])
     });
     // Use per capita if population is provided.
-    if (Array.isArray(population) && population.length) {
+    if (typeof population !== 'undefined') {
       for (var k in datasets[i].data) {
-        datasets[i].data[k] = (datasets[i].data[k] / countries[i]) * 100000;
+        datasets[i].data[k] = (datasets[i].data[k] / population[countries[i]]) * 100000;
       }
     }
   }
@@ -163,7 +163,6 @@ var config = {
     }
   }
 };
-
 fetch("https://pomber.github.io/covid19/timeseries.json")
   .then(response => {
     return response.json();

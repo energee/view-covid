@@ -1,6 +1,7 @@
 "use strict";
 
 var labels = [];
+var state_labels = [];
 var days = {};
 
 function getDays(data, country, population) {
@@ -12,6 +13,18 @@ function getDays(data, country, population) {
     if (confirmed.length > labels.length) labels.push(labels.length);
   }
   days[country] = confirmed;
+  return confirmed;
+}
+
+function getDaysStates(state_data, states) {
+  var confirmed = [];
+  for (var day of state_data[states]) {
+    if (day["confirmed"] < 5) continue;
+    confirmed.push(day["confirmed"]);
+
+    if (confirmed.length > state_labels.length) state_labels.push(state_labels.length);
+  }
+  days[states] = confirmed;
   return confirmed;
 }
 
@@ -53,7 +66,7 @@ function getDatasets(data, fn, countries, fill, population) {
     // Use per capita if population is provided.
     if (Array.isArray(population) && population.length) {
       for (var k in datasets[i].data) {
-        datasets[i].data[k] = (datasets[i].data[k] / population[i]) * 100000;
+        datasets[i].data[k] = (datasets[i].data[k] / countries[i]) * 100000;
       }
     }
   }
@@ -65,6 +78,7 @@ function getDatasets(data, fn, countries, fill, population) {
 var rate_cvs = document.getElementById("rate").getContext("2d");
 var recovery_cvs = document.getElementById("recovery-per-capita").getContext("2d");
 var recovery = document.getElementById("recovery").getContext("2d");
+var state = document.getElementById("states").getContext("2d");
 
 var countries = [
   "US",
@@ -81,19 +95,22 @@ var countries = [
   "France"
 ];
 
-var population = [
-  331002651,
-  126476461,
-  60461826,
-  1439323776,
-  5850342,
-  37742154,
-  67886011,
-  51269185,
-  83992949,
-  46754778,
-  83783942,
-  65273511
+var states = [
+  "New York",
+  "New Jersey",
+  "California",
+  "Louisiana",
+  "Michigan",
+  "Illinois",
+  "Washington",
+  "Florida",
+  "Texas",
+  "Georgia",
+  "Connecticut",
+  "Pennsylvania",
+  "North Carolina",
+  "Massachusetts",
+  // "Colorado",
 ];
 
 var config = {
@@ -199,4 +216,28 @@ fetch("https://pomber.github.io/covid19/timeseries.json")
     );
     cconfig.data.labels = labels;
     var chartrc = new Chart(recovery, cconfig);
-  });
+
+  }
+);
+
+fetch("https://titaniumbones.github.io/covid19/provinces-US.json")
+  .then(response => {
+    return response.json();
+  })
+  .then(state_data => {
+    var cconfig = JSON.parse(JSON.stringify(config));
+    cconfig.data.datasets = getDatasets(
+      state_data,
+      getDaysStates,
+      states,
+      false
+    );
+    cconfig.options.title.text = "Active Cases per state";
+    cconfig.options.scales.yAxes[0].scaleLabel.labelString =
+      "Total Active Cases per State";
+    cconfig.options.scales.xAxes[0].scaleLabel.labelString =
+        "Days Since 5 Confirmed";
+    cconfig.data.labels = state_labels;
+    var chartrc = new Chart(state, cconfig);
+  }
+);

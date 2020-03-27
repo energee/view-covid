@@ -88,11 +88,11 @@ var countries = [
   "Singapore",
   "Canada",
   "United Kingdom",
-  "Korea, South",
   "Iran",
   "Spain",
   "Germany",
-  "France"
+  "Sweden",
+  "Norway"
 ];
 
 var states = [

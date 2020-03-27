@@ -28,6 +28,27 @@ function getDaysStates(state_data, states) {
   return confirmed;
 }
 
+function getDaysDead(data, countries) {
+  var confirmed = [];
+  for (var day of data[countries]) {
+    if (day["deaths"] < 25) continue;
+    confirmed.push(day["deaths"]);
+
+    if (confirmed.length > labels.length) labels.push(labels.length);
+  }
+  days[countries] = confirmed;
+  return confirmed;
+}
+
+function getDead(data, country) {
+  var infected = [];
+  for (var day of data[country]) {
+    if (day["confirmed"] < 25) continue;
+    infected.push(day["deaths"]);
+  }
+  return infected;
+}
+
 function getInfected(data, country) {
   var infected = [];
   for (var day of data[country]) {
@@ -74,10 +95,11 @@ function getDatasets(data, fn, countries, fill, population) {
   return datasets;
 }
 
-// var confirmed_cvs = document.getElementById("confirmed").getContext("2d");
+
 var rate_cvs = document.getElementById("rate").getContext("2d");
 var recovery_cvs = document.getElementById("recovery-per-capita").getContext("2d");
 var recovery = document.getElementById("recovery").getContext("2d");
+var dead = document.getElementById("dead").getContext("2d");
 // var state = document.getElementById("states").getContext("2d");
 
 var countries = [
@@ -126,7 +148,7 @@ if (countriesQuery) {
   countries = countriesArray;
 }
 
-var config = {
+let config = {
   type: "line",
   data: {
     datasets: null,
@@ -203,53 +225,44 @@ fetch("https://pomber.github.io/covid19/timeseries.json")
     var chartr = new Chart(rate_cvs, cconfig);
 
     cconfig = JSON.parse(JSON.stringify(config));
-    cconfig.options.title.text = "Total Cases Comparison (per capita)";
+    cconfig.options.title.text = "Total Confirmed Cases Comparison (per capita)";
     cconfig.options.scales.yAxes[0].scaleLabel.labelString =
       "Total Cases (per capita)";
     cconfig.data.datasets = getDatasets(
       data,
       getInfected,
       countries,
-      false,
+      true,
       population
     );
     cconfig.data.labels = labels;
     var chartrc = new Chart(recovery_cvs, cconfig);
 
     cconfig = JSON.parse(JSON.stringify(config));
-    cconfig.options.title.text = "Total Cases Comparison (total per country)";
+    cconfig.options.title.text = "Total Confirmed Cases Comparison (total per country)";
     cconfig.options.scales.yAxes[0].scaleLabel.labelString =
-      "Total Cases";
+      "Total Confirmed Cases";
     cconfig.data.datasets = getDatasets(
       data,
       getInfected,
       countries,
-      false
+      true
     );
     cconfig.data.labels = labels;
     var chartrc = new Chart(recovery, cconfig);
 
+    cconfig = JSON.parse(JSON.stringify(config));
+    cconfig.options.title.text = "Total Deaths Comparison (total per country)";
+    cconfig.options.scales.yAxes[0].scaleLabel.labelString =
+      "Total Deaths";
+    cconfig.data.datasets = getDatasets(
+      data,
+      getDead,
+      countries,
+      true
+    );
+    cconfig.data.labels = labels;
+    var chartrc = new Chart(dead, cconfig);
+
   }
 );
-
-// fetch("https://titaniumbones.github.io/covid19/provinces-US.json")
-//   .then(response => {
-//     return response.json();
-//   })
-//   .then(state_data => {
-//     var cconfig = JSON.parse(JSON.stringify(config));
-//     cconfig.data.datasets = getDatasets(
-//       state_data,
-//       getDaysStates,
-//       states,
-//       false
-//     );
-//     cconfig.options.title.text = "Total Cases per state";
-//     cconfig.options.scales.yAxes[0].scaleLabel.labelString =
-//       "Total Cases per State";
-//     cconfig.options.scales.xAxes[0].scaleLabel.labelString =
-//         "Days Since 5 Confirmed";
-//     cconfig.data.labels = state_labels;
-//     var chartrc = new Chart(state, cconfig);
-//   }
-// );

@@ -1,12 +1,12 @@
 "use strict";
 
-var labels = [];
-var state_labels = [];
-var days = {};
+let labels = [];
+let state_labels = [];
+let days = {};
 
 function getDays(data, countries) {
-  var confirmed = [];
-  for (var day of data[countries]) {
+  let confirmed = [];
+  for (let day of data[countries]) {
     if (day["confirmed"] < 25) continue;
     confirmed.push(day["confirmed"]);
 
@@ -17,8 +17,8 @@ function getDays(data, countries) {
 }
 
 function getDaysStates(state_data, states) {
-  var confirmed = [];
-  for (var day of state_data[states]) {
+  let confirmed = [];
+  for (let day of state_data[states]) {
     if (day["confirmed"] < 5) continue;
     confirmed.push(day["confirmed"]);
 
@@ -29,8 +29,8 @@ function getDaysStates(state_data, states) {
 }
 
 function getDaysDead(data, countries) {
-  var confirmed = [];
-  for (var day of data[countries]) {
+  let confirmed = [];
+  for (let day of data[countries]) {
     if (day["deaths"] < 25) continue;
     confirmed.push(day["deaths"]);
 
@@ -41,8 +41,8 @@ function getDaysDead(data, countries) {
 }
 
 function getDead(data, country) {
-  var infected = [];
-  for (var day of data[country]) {
+  let infected = [];
+  for (let day of data[country]) {
     if (day["confirmed"] < 25) continue;
     infected.push(day["deaths"]);
   }
@@ -50,8 +50,8 @@ function getDead(data, country) {
 }
 
 function getDeadPerConfirmed(data, country) {
-  var deaths_confirmed = [];
-  for (var day of data[country]) {
+  let deaths_confirmed = [];
+  for (let day of data[country]) {
     if (day["confirmed"] < 25) continue;
     deaths_confirmed.push(day["deaths"] / day["confirmed"] * 100);
   }
@@ -59,8 +59,8 @@ function getDeadPerConfirmed(data, country) {
 }
 
 function getInfected(data, country) {
-  var infected = [];
-  for (var day of data[country]) {
+  let infected = [];
+  for (let day of data[country]) {
     if (day["confirmed"] < 25) continue;
     infected.push(day["confirmed"]);
   }
@@ -68,8 +68,8 @@ function getInfected(data, country) {
 }
 
 function getActive(data, country) {
-  var infected = [];
-  for (var day of data[country]) {
+  let infected = [];
+  for (let day of data[country]) {
     if (day["confirmed"] < 25) continue;
     infected.push(day["confirmed"] - day["recovered"] - day["deaths"]);
   }
@@ -77,14 +77,14 @@ function getActive(data, country) {
 }
 
 function getRate(data, country) {
-  var confirmed = days[country];
-  var rate = [0];
-  for (var i = 1; i < confirmed.length; i++) {
+  let confirmed = days[country];
+  let rate = [0];
+  for (let i = 1; i < confirmed.length; i++) {
     rate.push((confirmed[i] / confirmed[i - 1] - 1) * 100);
   }
 
-  var avgd = [0, 0, 0, 0, 0];
-  for (var i = 4; i < rate.length; i++) {
+  let avgd = [0, 0, 0, 0, 0];
+  for (let i = 4; i < rate.length; i++) {
     avgd.push(
       ((rate[i] + rate[i - 1] + rate[i - 2] + rate[i - 3]) / 4).toFixed(2)
     );
@@ -94,9 +94,9 @@ function getRate(data, country) {
 }
 
 function getDatasets(data, fn, countries, fill, population) {
-  var datasets = [];
+  let datasets = [];
 
-  for (var i = 0; i < countries.length; i++) {
+  for (let i = 0; i < countries.length; i++) {
     datasets.push({
       label: countries[i],
       fill: fill,
@@ -104,7 +104,7 @@ function getDatasets(data, fn, countries, fill, population) {
     });
     // Use per capita if population is provided.
     if (typeof population !== 'undefined') {
-      for (var k in datasets[i].data) {
+      for (let k in datasets[i].data) {
         datasets[i].data[k] = (datasets[i].data[k] / population[countries[i]]) * 100000;
       }
     }
@@ -114,17 +114,18 @@ function getDatasets(data, fn, countries, fill, population) {
 }
 
 
-var rate_cvs = document.getElementById("rate").getContext("2d");
-var confirmed_pc = document.getElementById("confirmed-per-capita").getContext("2d");
-var confirmed = document.getElementById("confirmed").getContext("2d");
-var active_pc = document.getElementById("active-per-capita").getContext("2d");
-var active = document.getElementById("active").getContext("2d");
-var dead_pc = document.getElementById("dead-per-capita").getContext("2d");
-var dead = document.getElementById("dead").getContext("2d");
-var dead_per_case = document.getElementById("dead-per-case").getContext("2d");
-// var state = document.getElementById("states").getContext("2d");
+let rate_cvs = document.getElementById("rate").getContext("2d");
+let confirmed_pc = document.getElementById("confirmed-per-capita").getContext("2d");
+let confirmed = document.getElementById("confirmed").getContext("2d");
+let active_pc = document.getElementById("active-per-capita").getContext("2d");
+let active = document.getElementById("active").getContext("2d");
+let dead_pc = document.getElementById("dead-per-capita").getContext("2d");
+let dead = document.getElementById("dead").getContext("2d");
+let dead_per_case = document.getElementById("dead-per-case").getContext("2d");
+let state_pc = document.getElementById("states-per-capita").getContext("2d");
+let state = document.getElementById("states").getContext("2d");
 
-var countries = [
+let countries = [
   "US",
   "Japan",
   "Italy",
@@ -139,7 +140,7 @@ var countries = [
   "Norway"
 ];
 
-var states = [
+let states = [
   "New York",
   "New Jersey",
   "California",
@@ -148,11 +149,8 @@ var states = [
   "Illinois",
   "Washington",
   "Florida",
-  "Texas",
   "Georgia",
   "Connecticut",
-  "Pennsylvania",
-  "North Carolina",
   "Massachusetts"
 ];
 
@@ -244,7 +242,7 @@ fetch("https://pomber.github.io/covid19/timeseries.json")
     };
     cconfig.data.datasets = getDatasets(data, getRate, countries, true);
     cconfig.data.labels = labels;
-    var chartr = new Chart(rate_cvs, cconfig);
+    let chartr = new Chart(rate_cvs, cconfig);
 
     cconfig = JSON.parse(JSON.stringify(config));
     cconfig.options.title.text = "Confirmed Cases (per capita)";
@@ -258,7 +256,7 @@ fetch("https://pomber.github.io/covid19/timeseries.json")
       population
     );
     cconfig.data.labels = labels;
-    var chartrc = new Chart(confirmed_pc, cconfig);
+    let chartrc = new Chart(confirmed_pc, cconfig);
 
     cconfig = JSON.parse(JSON.stringify(config));
     cconfig.options.title.text = "Confirmed Cases (total per country)";
@@ -271,7 +269,7 @@ fetch("https://pomber.github.io/covid19/timeseries.json")
       true
     );
     cconfig.data.labels = labels;
-    var chartrc = new Chart(confirmed, cconfig);
+    chartrc = new Chart(confirmed, cconfig);
 
     cconfig = JSON.parse(JSON.stringify(config));
     cconfig.options.title.text = "Active Cases Per Capita (confirmed cases after removing recovered cases and deaths)";
@@ -285,7 +283,7 @@ fetch("https://pomber.github.io/covid19/timeseries.json")
       population
     );
     cconfig.data.labels = labels;
-    var chartrc = new Chart(active_pc, cconfig);
+    chartrc = new Chart(active_pc, cconfig);
 
     cconfig = JSON.parse(JSON.stringify(config));
     cconfig.options.title.text = "Total Active Cases (confirmed cases after removing recovered cases and deaths)";
@@ -298,7 +296,7 @@ fetch("https://pomber.github.io/covid19/timeseries.json")
       true
     );
     cconfig.data.labels = labels;
-    var chartrc = new Chart(active, cconfig);
+    chartrc = new Chart(active, cconfig);
 
     cconfig = JSON.parse(JSON.stringify(config));
     cconfig.options.title.text = "Deaths (per capita)";
@@ -312,7 +310,7 @@ fetch("https://pomber.github.io/covid19/timeseries.json")
       population
     );
     cconfig.data.labels = labels;
-    var chartrc = new Chart(dead_pc, cconfig);
+    chartrc = new Chart(dead_pc, cconfig);
 
     cconfig = JSON.parse(JSON.stringify(config));
     cconfig.options.title.text = "Total Deaths (total per country)";
@@ -325,7 +323,7 @@ fetch("https://pomber.github.io/covid19/timeseries.json")
       true
     );
     cconfig.data.labels = labels;
-    var chartrc = new Chart(dead, cconfig);
+    chartrc = new Chart(dead, cconfig);
 
     cconfig = JSON.parse(JSON.stringify(config));
     cconfig.options.title.text = "Deaths Per Confirmed Cases (per country)";
@@ -341,6 +339,44 @@ fetch("https://pomber.github.io/covid19/timeseries.json")
       true
     );
     cconfig.data.labels = labels;
-    var chartrc = new Chart(dead_per_case, cconfig);
+    chartrc = new Chart(dead_per_case, cconfig);
+  }
+);
+
+fetch("https://energ.ee/covid19-us-api/states.json")
+  .then(response => {
+    return response.json();
+  })
+  .then(state_data => {
+    let cconfig = JSON.parse(JSON.stringify(config));
+    cconfig.data.datasets = getDatasets(
+      state_data,
+      getDaysStates,
+      states,
+      true,
+      state_population
+    );
+    cconfig.options.title.text = "Cases per state (per capita)";
+    cconfig.options.scales.yAxes[0].scaleLabel.labelString =
+      "Cases per State per capita";
+    cconfig.options.scales.xAxes[0].scaleLabel.labelString =
+        "Days Since 5 Confirmed";
+    cconfig.data.labels = state_labels;
+    let chartrc = new Chart(state_pc, cconfig);
+
+    cconfig = JSON.parse(JSON.stringify(config));
+    cconfig.data.datasets = getDatasets(
+      state_data,
+      getDaysStates,
+      states,
+      true,
+    );
+    cconfig.options.title.text = "Total Cases per state";
+    cconfig.options.scales.yAxes[0].scaleLabel.labelString =
+      "Total Cases per State";
+    cconfig.options.scales.xAxes[0].scaleLabel.labelString =
+        "Days Since 5 Confirmed";
+    cconfig.data.labels = state_labels;
+    chartrc = new Chart(state, cconfig);
   }
 );

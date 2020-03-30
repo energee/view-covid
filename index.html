@@ -1,10 +1,10 @@
 <html>
 
 <head>
-  <title>Corona Virus Tracker</title>
-  <meta property="og:title" content="Corona Virus Tracker" />
+  <title>COVID-19 Tracker</title>
+  <meta property="og:title" content="COVID-19 Tracker" />
   <meta property="og:type" content="website" />
-  <meta property="og:description" content="Up to date visualizations of Corona Virus." />
+  <meta property="og:description" content="Up-to-date visualizations of COVID-19 data." />
   <meta property="og:url" content="https://energ.ee/corona-virus" />
   <meta property="og:image" content="https://raw.githubusercontent.com/energee/corona-virus/master/assets/thumbnail.png" />
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-147560350-1"></script>
@@ -15,7 +15,7 @@
     gtag('config', 'UA-147560350-1');
   </script>
   <!—- ShareThis BEGIN -—>
-  <!-- <script async src="https://platform-api.sharethis.com/js/sharethis.js#property=5e7567b0fac6be0012fa5e43&product=sticky-share-buttons"></script> -->
+  <script async src="https://platform-api.sharethis.com/js/sharethis.js#property=5e7567b0fac6be0012fa5e43&product=sticky-share-buttons"></script>
   <!—- ShareThis END -—>
   <style>
     body {
@@ -40,19 +40,19 @@
 </head>
 
 <body>
-  <h1>Corona Virus Tracker</h1>
-  <p style="font-size: 1.6em; max-width: 1200px; margin: 0 auto">The charts that I found online were tracking totals, but this does not help to understand the amount of cases based on population or the number of cases vs the previous day. I created these charts to visualize growth from previous day, compare cases between countries, with an example showing recoveries on a per-capita basis and actual totals.
+  <h1>COVID-19 Tracker</h1>
+  <p style="font-size: 1.6em; max-width: 1200px; margin: 0 auto">Smarter ways of comparing available data
     <br><br>
   </p>
-  <p style="font-size: 1.2em; color: yellow">Update March 25th: Active case charts have been removed since JHU is no longer providing recovered cases.</p>
   <br><br>
   <p>Charts can be manipulated by toggling their respective countries above the charts.</p>
   <canvas id="rate"></canvas>
-  <canvas id="recovery-per-capita"></canvas>
-  <p>
-    Percent of new cases in comparison to previous day. Note: these numbers are a total of positive reported cases, so they may be affected by rate of testing and results.
-  </p>
-  <canvas id="recovery"></canvas>
+  <canvas id="dead-per-case"></canvas>
+  <canvas id="confirmed-per-capita"></canvas>
+  <canvas id="confirmed"></canvas>
+  <canvas id="active-per-capita"></canvas>
+  <canvas id="active"></canvas>
+  <canvas id="dead-per-capita"></canvas>
   <canvas id="dead"></canvas>
   <p><em>Data is updated 3 times per day</em></p>
   <p style="float: right">Code available on <a href="https://github.com/energee/corona-virus">Github</a> - <a href="https://github.com/pomber/covid19">Data Source available here</a></p>

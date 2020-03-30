@@ -49,11 +49,29 @@ function getDead(data, country) {
   return infected;
 }
 
+function getDeadPerConfirmed(data, country) {
+  var deaths_confirmed = [];
+  for (var day of data[country]) {
+    if (day["confirmed"] < 25) continue;
+    deaths_confirmed.push(day["deaths"] / day["confirmed"] * 100);
+  }
+  return deaths_confirmed;
+}
+
 function getInfected(data, country) {
   var infected = [];
   for (var day of data[country]) {
     if (day["confirmed"] < 25) continue;
-    infected.push(day["confirmed"] - day["deaths"]);
+    infected.push(day["confirmed"]);
+  }
+  return infected;
+}
+
+function getActive(data, country) {
+  var infected = [];
+  for (var day of data[country]) {
+    if (day["confirmed"] < 25) continue;
+    infected.push(day["confirmed"] - day["recovered"] - day["deaths"]);
   }
   return infected;
 }
@@ -97,9 +115,13 @@ function getDatasets(data, fn, countries, fill, population) {
 
 
 var rate_cvs = document.getElementById("rate").getContext("2d");
-var recovery_cvs = document.getElementById("recovery-per-capita").getContext("2d");
-var recovery = document.getElementById("recovery").getContext("2d");
+var confirmed_pc = document.getElementById("confirmed-per-capita").getContext("2d");
+var confirmed = document.getElementById("confirmed").getContext("2d");
+var active_pc = document.getElementById("active-per-capita").getContext("2d");
+var active = document.getElementById("active").getContext("2d");
+var dead_pc = document.getElementById("dead-per-capita").getContext("2d");
 var dead = document.getElementById("dead").getContext("2d");
+var dead_per_case = document.getElementById("dead-per-case").getContext("2d");
 // var state = document.getElementById("states").getContext("2d");
 
 var countries = [
@@ -107,12 +129,12 @@ var countries = [
   "Japan",
   "Italy",
   "China",
-  "Singapore",
+  "Belarus",
   "Canada",
   "United Kingdom",
   "Iran",
   "Spain",
-  "Germany",
+  "Ukraine",
   "Sweden",
   "Norway"
 ];
@@ -167,7 +189,7 @@ let config = {
     title: {
       display: true,
       fontColor: "white",
-      text: "Corona Virus Confirmed Cases (per capita)"
+      text: "Confirmed Cases (per capita)"
     },
     tooltips: {
       mode: "index",
@@ -203,7 +225,7 @@ fetch("https://pomber.github.io/covid19/timeseries.json")
     return response.json();
   })
   .then(data => {
-    var cconfig = JSON.parse(JSON.stringify(config));
+    let cconfig = JSON.parse(JSON.stringify(config));
     cconfig.data.datasets = getDatasets(
       data,
       getDays,
@@ -213,7 +235,7 @@ fetch("https://pomber.github.io/covid19/timeseries.json")
     );
 
     cconfig = JSON.parse(JSON.stringify(config));
-    cconfig.options.title.text = "Corona Virus Infection Rate Comparison";
+    cconfig.options.title.text = "Infection Rate (Percentage of growth from today's cases vs yesterday - as this decreases, rate of spread is slowing)";
     cconfig.options.scales.yAxes[0].scaleLabel.labelString =
       "Confirmed today/yesterday";
     cconfig.options.scales.yAxes[0].ticks.min = 0;
@@ -225,9 +247,9 @@ fetch("https://pomber.github.io/covid19/timeseries.json")
     var chartr = new Chart(rate_cvs, cconfig);
 
     cconfig = JSON.parse(JSON.stringify(config));
-    cconfig.options.title.text = "Total Confirmed Cases Comparison (per capita)";
+    cconfig.options.title.text = "Confirmed Cases (per capita)";
     cconfig.options.scales.yAxes[0].scaleLabel.labelString =
-      "Total Cases (per capita)";
+      "Cases per capita";
     cconfig.data.datasets = getDatasets(
       data,
       getInfected,
@@ -236,10 +258,10 @@ fetch("https://pomber.github.io/covid19/timeseries.json")
       population
     );
     cconfig.data.labels = labels;
-    var chartrc = new Chart(recovery_cvs, cconfig);
+    var chartrc = new Chart(confirmed_pc, cconfig);
 
     cconfig = JSON.parse(JSON.stringify(config));
-    cconfig.options.title.text = "Total Confirmed Cases Comparison (total per country)";
+    cconfig.options.title.text = "Confirmed Cases (total per country)";
     cconfig.options.scales.yAxes[0].scaleLabel.labelString =
       "Total Confirmed Cases";
     cconfig.data.datasets = getDatasets(
@@ -249,10 +271,51 @@ fetch("https://pomber.github.io/covid19/timeseries.json")
       true
     );
     cconfig.data.labels = labels;
-    var chartrc = new Chart(recovery, cconfig);
+    var chartrc = new Chart(confirmed, cconfig);
 
     cconfig = JSON.parse(JSON.stringify(config));
-    cconfig.options.title.text = "Total Deaths Comparison (total per country)";
+    cconfig.options.title.text = "Active Cases Per Capita (confirmed cases after removing recovered cases and deaths)";
+    cconfig.options.scales.yAxes[0].scaleLabel.labelString =
+      "Active Cases per capita";
+    cconfig.data.datasets = getDatasets(
+      data,
+      getActive,
+      countries,
+      true,
+      population
+    );
+    cconfig.data.labels = labels;
+    var chartrc = new Chart(active_pc, cconfig);
+
+    cconfig = JSON.parse(JSON.stringify(config));
+    cconfig.options.title.text = "Total Active Cases (confirmed cases after removing recovered cases and deaths)";
+    cconfig.options.scales.yAxes[0].scaleLabel.labelString =
+      "Total Active Cases";
+    cconfig.data.datasets = getDatasets(
+      data,
+      getActive,
+      countries,
+      true
+    );
+    cconfig.data.labels = labels;
+    var chartrc = new Chart(active, cconfig);
+
+    cconfig = JSON.parse(JSON.stringify(config));
+    cconfig.options.title.text = "Deaths (per capita)";
+    cconfig.options.scales.yAxes[0].scaleLabel.labelString =
+      "Deaths per capita";
+    cconfig.data.datasets = getDatasets(
+      data,
+      getDead,
+      countries,
+      true,
+      population
+    );
+    cconfig.data.labels = labels;
+    var chartrc = new Chart(dead_pc, cconfig);
+
+    cconfig = JSON.parse(JSON.stringify(config));
+    cconfig.options.title.text = "Total Deaths (total per country)";
     cconfig.options.scales.yAxes[0].scaleLabel.labelString =
       "Total Deaths";
     cconfig.data.datasets = getDatasets(
@@ -264,5 +327,20 @@ fetch("https://pomber.github.io/covid19/timeseries.json")
     cconfig.data.labels = labels;
     var chartrc = new Chart(dead, cconfig);
 
+    cconfig = JSON.parse(JSON.stringify(config));
+    cconfig.options.title.text = "Deaths Per Confirmed Cases (per country)";
+    cconfig.options.scales.yAxes[0].scaleLabel.labelString =
+      "Total Deaths / Confirmed";
+    cconfig.options.scales.yAxes[0].ticks.callback = function(value) {
+      return value + "%";
+    };
+    cconfig.data.datasets = getDatasets(
+      data,
+      getDeadPerConfirmed,
+      countries,
+      true
+    );
+    cconfig.data.labels = labels;
+    var chartrc = new Chart(dead_per_case, cconfig);
   }
 );

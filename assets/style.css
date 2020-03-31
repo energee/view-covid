@@ -1,0 +1,24 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&family=Quicksand&display=swap');
+body {
+  background-color: #333;
+  color: white;
+  font-family: 'Open Sans';
+  font-size: 12px;
+  font-weight: bold;
+  padding: 2%;
+  text-align: center;
+}
+p {
+  font-weight: normal;
+}
+a,
+a:visited {
+  color: #80b1d3;
+  text-decoration: none;
+}
+#changelog {
+  width: 100%
+}
+#changelog pre {
+  color: white
+}

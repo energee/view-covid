@@ -140,32 +140,48 @@ let dead_state = document.getElementById("dead-states").getContext("2d");
 
 let countries = [
   "US",
-  "Japan",
   "Italy",
-  "China",
-  "Belarus",
-  "Canada",
-  "United Kingdom",
-  "Iran",
   "Spain",
+  "China",
+  "Germany",
+  "France",
+  "Iran",
+  "United Kingdom",
+  "Switzerland",
+  "Turkey",
+  "Belgium",
+  "Netherlands",
+  "Austria",
+  "Korea, South",
+  "Canada",
+  "Belarus",
   "Ukraine",
   "Sweden",
-  "Norway"
+  "Norway",
+  "Israel"
 ];
 
 let states = [
   "New York",
   "New Jersey",
-  "Pennsylvania",
-  "California",
-  "Louisiana",
   "Michigan",
+  "California",
+  "Massachusetts",
+  "Florida",
   "Illinois",
   "Washington",
-  "Florida",
+  "Louisiana",
+  "Pennsylvania",
   "Georgia",
+  "Texas",
+  "Colorado",
   "Connecticut",
-  "Massachusetts"
+  "Ohio",
+  "Indiana",
+  "Tennessee",
+  "Maryland",
+  "District of Columbia",
+  "Virginia"
 ];
 
 // Quick hack to allow State, country override
@@ -192,11 +208,14 @@ let config = {
     responsive: true,
     plugins: {
       colorschemes: {
-        scheme: "brewer.SetThree12"
+        scheme: "tableau.Tableau20"
       }
     },
     legend: {
-      labels: {}
+      position: "right",
+      labels: {
+        boxWidth: 12,
+      }
     },
     title: {
       display: true,
@@ -266,7 +285,7 @@ fetch("https://pomber.github.io/covid19/timeseries.json")
       data,
       getInfected,
       countries,
-      true,
+      false,
       population
     );
     cconfig.data.labels = labels;
@@ -280,7 +299,7 @@ fetch("https://pomber.github.io/covid19/timeseries.json")
       data,
       getInfected,
       countries,
-      true
+      false
     );
     cconfig.data.labels = labels;
     chartrc = new Chart(confirmed, cconfig);
@@ -293,7 +312,7 @@ fetch("https://pomber.github.io/covid19/timeseries.json")
       data,
       getActive,
       countries,
-      true,
+      false,
       population
     );
     cconfig.data.labels = labels;
@@ -320,7 +339,7 @@ fetch("https://pomber.github.io/covid19/timeseries.json")
       data,
       getDead,
       countries,
-      true,
+      false,
       population
     );
     cconfig.data.labels = labels;
@@ -367,7 +386,7 @@ fetch("https://energ.ee/covid19-us-api/states.json")
       state_data,
       getDaysStates,
       states,
-      true,
+      false,
       state_population
     );
     cconfig.options.title.text = "Cases per state (per capita)";
@@ -383,7 +402,7 @@ fetch("https://energ.ee/covid19-us-api/states.json")
       state_data,
       getDaysStates,
       states,
-      true,
+      false,
     );
     cconfig.options.title.text = "Total Cases per state";
     cconfig.options.scales.yAxes[0].scaleLabel.labelString =
@@ -398,7 +417,7 @@ fetch("https://energ.ee/covid19-us-api/states.json")
       state_data,
       getDeadStates,
       states,
-      true,
+      false,
     );
     cconfig.options.title.text = "Total Deaths per state";
     cconfig.options.scales.yAxes[0].scaleLabel.labelString =
@@ -409,3 +428,7 @@ fetch("https://energ.ee/covid19-us-api/states.json")
     chartrc = new Chart(dead_state, cconfig);
   }
 );
+
+Chart.defaults.global.elements.line.borderWidth = 1;
+Chart.defaults.global.elements.point.radius = .5;
+Chart.defaults.global.defaultFontFamily = "Open Sans";

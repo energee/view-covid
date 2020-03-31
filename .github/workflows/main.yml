@@ -15,7 +15,7 @@ jobs:
       - name: Capture changelog
         run: |
           cd main
-          git log --date=format:'%b %d %I:%m%p'  --pretty="format:%ad %s"  --invert-grep --author="GitHub Action" > CHANGELOG.txt
+          git log --date=format:'%B %d %I:%m%p' --pretty="format:Update %ad - %s"  --invert-grep --author="GitHub Action" > CHANGELOG.txt
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add .

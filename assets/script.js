@@ -28,6 +28,18 @@ function getDaysStates(state_data, states) {
   return confirmed;
 }
 
+function getDeadStates(state_data, states) {
+  let deaths = [];
+  for (let day of state_data[states]) {
+    if (day["deaths"] < 1) continue;
+    deaths.push(day["deaths"]);
+
+    if (deaths.length > state_labels.length) state_labels.push(state_labels.length);
+  }
+  days[states] = deaths;
+  return deaths;
+}
+
 function getDaysDead(data, countries) {
   let confirmed = [];
   for (let day of data[countries]) {
@@ -124,6 +136,7 @@ let dead = document.getElementById("dead").getContext("2d");
 let dead_per_case = document.getElementById("dead-per-case").getContext("2d");
 let state_pc = document.getElementById("states-per-capita").getContext("2d");
 let state = document.getElementById("states").getContext("2d");
+let dead_state = document.getElementById("dead-states").getContext("2d");
 
 let countries = [
   "US",
@@ -143,6 +156,7 @@ let countries = [
 let states = [
   "New York",
   "New Jersey",
+  "Pennsylvania",
   "California",
   "Louisiana",
   "Michigan",
@@ -378,5 +392,20 @@ fetch("https://energ.ee/covid19-us-api/states.json")
         "Days Since 5 Confirmed";
     cconfig.data.labels = state_labels;
     chartrc = new Chart(state, cconfig);
+
+    cconfig = JSON.parse(JSON.stringify(config));
+    cconfig.data.datasets = getDatasets(
+      state_data,
+      getDeadStates,
+      states,
+      true,
+    );
+    cconfig.options.title.text = "Total Deaths per state";
+    cconfig.options.scales.yAxes[0].scaleLabel.labelString =
+      "Total Deaths";
+    cconfig.options.scales.xAxes[0].scaleLabel.labelString =
+        "Days Since first death Confirmed";
+    cconfig.data.labels = state_labels;
+    chartrc = new Chart(dead_state, cconfig);
   }
 );

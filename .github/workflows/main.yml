@@ -1,0 +1,27 @@
+name: Create Changelog
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  extract_job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          path: main
+      - name: Capture changelog
+        run: |
+          cd main
+          git log --date=format:'%b %d %I:%m%p'  --pretty="format:%ad %s"  --invert-grep --author="GitHub Action" > CHANGELOG.txt
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git diff-index --quiet HEAD || git commit -m "Updating changelog $(date +'%m/%d')" -a
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          directory: main

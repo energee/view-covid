@@ -1,1 +1,14 @@
-Update March 31 06:03PM - Added more countries, states and improved UI
+Update April 01 01:28AM - Add mobile support and fixed changelog
+Update March 31 06:06PM - Added more countries, states and improved UI
+Update March 31 07:46PM - Add github action
+Update March 31 12:46AM - Add favicon
+Update March 31 12:36AM - Added Deaths per state
+Update March 30 06:58PM - Added states again
+Update March 30 10:58AM - Added several new visualizations
+Update March 27 03:55PM - Added Chart of Total Deaths
+Update March 27 01:00PM - Removed SK and France, added Norway and Sweden
+Update March 23 10:45PM - Add query string location overrides
+Update March 23 09:23PM - Fixes per capita
+Update March 23 09:02PM - Added US states and wikipedia populatiopns of every countr keyed
+Update March 20 06:01PM - Updated charts and description
+Update March 20 05:52PM - Initial commit

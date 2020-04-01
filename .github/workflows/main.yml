@@ -8,14 +8,19 @@ jobs:
   extract_job:
     runs-on: ubuntu-latest
     steps:
+      - name: Setup timezone
+        uses: zcong1993/setup-timezone@master
+        with:
+          timezone: America/New_York
       - name: Checkout
         uses: actions/checkout@v2
         with:
           path: main
+          fetch-depth: 0
       - name: Capture changelog
         run: |
           cd main
-          git log --date=format:'%B %d %I:%m%p' --pretty="format:Update %ad - %s"  --invert-grep --author="GitHub Action" > CHANGELOG.txt
+          git log --date=format:'%B %d %I:%M%p' --pretty="format:Update %ad - %s"  --invert-grep --author="GitHub Action" > CHANGELOG.txt
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add .

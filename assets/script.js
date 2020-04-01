@@ -251,6 +251,10 @@ let config = {
     }
   }
 };
+// Put legend on the top when displaying on mobile.
+if ((window.innerWidth <= 480 ) || ( window.innerHeight <= 480)) {
+  config.options.legend.position = "top";
+}
 fetch("https://pomber.github.io/covid19/timeseries.json")
   .then(response => {
     return response.json();

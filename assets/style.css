@@ -16,9 +16,45 @@ a:visited {
   color: #80b1d3;
   text-decoration: none;
 }
+.toggle-info {
+  float: right
+}
 #changelog {
   width: 100%
 }
 #changelog pre {
   color: white
+}
+@media only screen and (orientation: portrait) {
+  html {
+    content: "rotate device :)";
+    display: block;
+  }
+  .toggle-info {display: none}
+  #chart-wrapper {display: none}
+  h2:after {
+    content: 'rotate your device';
+    display: block;
+    margin: 30vh 0;
+    animation: spin 4s ease infinite;
+  }
+  @keyframes spin {
+    10% {
+      transform:rotate(90deg);
+    }
+    20% {
+      transform:rotate(0deg);
+    }
+    100% {
+      transform:rotate(0deg);
+    }
+  }
+}
+@media only screen and (max-width: 900px) and (orientation: landscape) {
+  h2:after {
+    content: 'for best results, view on desktop display';
+    display: block;
+    margin: 2em 0;
+  }
+  .toggle-info {float: initial}
 }

@@ -16,8 +16,13 @@ a:visited {
   color: #80b1d3;
   text-decoration: none;
 }
-.toggle-info {
-  float: right
+#toggle-info {
+  float: right;
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+#toggle-info.show {
+  opacity: 1;
 }
 #changelog {
   width: 100%
@@ -56,5 +61,6 @@ a:visited {
     display: block;
     margin: 2em 0;
   }
-  .toggle-info {float: initial}
+  #toggle-info {float: initial}
+  .github-corner {display: none}
 }

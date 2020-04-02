@@ -125,6 +125,15 @@ function getDatasets(data, fn, countries, fill, population) {
   return datasets;
 }
 
+function displayInfo() {
+  let clicked = localStorage.getItem('legendClicked'),
+      element = document.getElementById('toggle-info');
+  if (clicked && parseInt(clicked) == 5) {
+    element.classList.remove('show');
+  } else {
+    element.classList.add('show');
+  }
+}
 
 let rate_cvs = document.getElementById("rate").getContext("2d");
 let confirmed_pc = document.getElementById("confirmed-per-capita").getContext("2d");
@@ -215,6 +224,7 @@ let config = {
       position: "right",
       labels: {
         boxWidth: 12,
+        fontColor: "white",
       }
     },
     title: {
@@ -255,6 +265,8 @@ let config = {
 if ((window.innerWidth <= 480 ) || ( window.innerHeight <= 480)) {
   config.options.legend.position = "top";
 }
+displayInfo();
+
 fetch("https://pomber.github.io/covid19/timeseries.json")
   .then(response => {
     return response.json();
@@ -432,7 +444,19 @@ fetch("https://energ.ee/covid19-us-api/states.json")
     chartrc = new Chart(dead_state, cconfig);
   }
 );
-
 Chart.defaults.global.elements.line.borderWidth = 1;
 Chart.defaults.global.elements.point.radius = .5;
 Chart.defaults.global.defaultFontFamily = "Open Sans";
+Chart.defaults.global.legend.onClick = function (e, legendItem) {
+  var index = legendItem.datasetIndex;
+  var ci = this.chart;
+  var meta = ci.getDatasetMeta(index);
+  meta.hidden = meta.hidden === null ? !ci.data.datasets[index].hidden : null;
+  ci.update();
+  // Count legend clicks up to 5 and set in localstorage.
+  if (localStorage.getItem('legendClicked') < 5) {
+    var clicks = parseInt(localStorage.getItem('legendClicked'));
+    localStorage.setItem('legendClicked', ++clicks || 1);
+    displayInfo();
+  }
+}

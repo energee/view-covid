@@ -447,6 +447,12 @@ fetch("https://energ.ee/covid19-us-api/states.json")
 Chart.defaults.global.elements.line.borderWidth = 1;
 Chart.defaults.global.elements.point.radius = .5;
 Chart.defaults.global.defaultFontFamily = "Open Sans";
+Chart.defaults.global.legend.onHover = function (e) {
+  e.target.style.cursor = 'pointer'
+};
+Chart.defaults.global.legend.onLeave = function (e) {
+  e.target.style.cursor = 'default'
+}
 Chart.defaults.global.legend.onClick = function (e, legendItem) {
   var index = legendItem.datasetIndex;
   var ci = this.chart;

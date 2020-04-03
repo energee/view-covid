@@ -1,3 +1,4 @@
+Update April 02 10:12PM - Add todo
 Update April 01 08:24PM - Made legend items easier to read and now tooltip over legend disappears after 5 clicks
 Update April 01 01:28AM - Add mobile support and fixed changelog
 Update March 31 06:06PM - Added more countries, states and improved UI

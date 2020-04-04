@@ -392,7 +392,7 @@ fetch("https://pomber.github.io/covid19/timeseries.json")
   }
 );
 
-fetch("https://energ.ee/covid19-us-api/states.json")
+fetch("https://energee.github.io/covid19-us-api/states.json")
   .then(response => {
     return response.json();
   })

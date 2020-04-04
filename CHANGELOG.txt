@@ -1,3 +1,4 @@
+Update April 03 09:45PM - Create CNAME
 Update April 02 10:12PM - Add a todo to the readme and made cursor display as pointer when hovering over legend options (right side)
 Update April 01 08:24PM - Made legend items easier to read and now tooltip over legend disappears after 5 clicks
 Update April 01 01:28AM - Add mobile support and fixed changelog

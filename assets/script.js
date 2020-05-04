@@ -1,4 +1,4 @@
-"use strict";
+/*jshint esversion: 8 */
 
 let labels = [];
 let state_labels = [];
@@ -7,8 +7,8 @@ let days = {};
 function getDays(data, countries) {
   let confirmed = [];
   for (let day of data[countries]) {
-    if (day["confirmed"] < 25) continue;
-    confirmed.push(day["confirmed"]);
+    if (day.confirmed < 25) continue;
+    confirmed.push(day.confirmed);
 
     if (confirmed.length > labels.length) labels.push(labels.length);
   }
@@ -19,8 +19,8 @@ function getDays(data, countries) {
 function getDaysStates(state_data, states) {
   let confirmed = [];
   for (let day of state_data[states]) {
-    if (day["confirmed"] < 5) continue;
-    confirmed.push(day["confirmed"]);
+    if (day.confirmed < 5) continue;
+    confirmed.push(day.confirmed);
 
     if (confirmed.length > state_labels.length) state_labels.push(state_labels.length);
   }
@@ -31,8 +31,8 @@ function getDaysStates(state_data, states) {
 function getDeadStates(state_data, states) {
   let deaths = [];
   for (let day of state_data[states]) {
-    if (day["deaths"] < 1) continue;
-    deaths.push(day["deaths"]);
+    if (day.deaths < 1) continue;
+    deaths.push(day.deaths);
 
     if (deaths.length > state_labels.length) state_labels.push(state_labels.length);
   }
@@ -43,8 +43,8 @@ function getDeadStates(state_data, states) {
 function getDaysDead(data, countries) {
   let confirmed = [];
   for (let day of data[countries]) {
-    if (day["deaths"] < 25) continue;
-    confirmed.push(day["deaths"]);
+    if (day.deaths < 25) continue;
+    confirmed.push(day.deaths);
 
     if (confirmed.length > labels.length) labels.push(labels.length);
   }
@@ -55,8 +55,8 @@ function getDaysDead(data, countries) {
 function getDead(data, country) {
   let infected = [];
   for (let day of data[country]) {
-    if (day["confirmed"] < 25) continue;
-    infected.push(day["deaths"]);
+    if (day.confirmed < 25) continue;
+    infected.push(day.deaths);
   }
   return infected;
 }
@@ -64,8 +64,8 @@ function getDead(data, country) {
 function getDeadPerConfirmed(data, country) {
   let deaths_confirmed = [];
   for (let day of data[country]) {
-    if (day["confirmed"] < 25) continue;
-    deaths_confirmed.push(day["deaths"] / day["confirmed"] * 100);
+    if (day.confirmed < 25) continue;
+    deaths_confirmed.push(day.deaths / day.confirmed * 100);
   }
   return deaths_confirmed;
 }
@@ -73,8 +73,8 @@ function getDeadPerConfirmed(data, country) {
 function getInfected(data, country) {
   let infected = [];
   for (let day of data[country]) {
-    if (day["confirmed"] < 25) continue;
-    infected.push(day["confirmed"]);
+    if (day.confirmed < 25) continue;
+    infected.push(day.confirmed);
   }
   return infected;
 }
@@ -82,8 +82,8 @@ function getInfected(data, country) {
 function getActive(data, country) {
   let infected = [];
   for (let day of data[country]) {
-    if (day["confirmed"] < 25) continue;
-    infected.push(day["confirmed"] - day["recovered"] - day["deaths"]);
+    if (day.confirmed < 25) continue;
+    infected.push(day.confirmed - day.recovered - day.deaths);
   }
   return infected;
 }
@@ -445,14 +445,14 @@ fetch("https://energ.ee/covid19-us-api/states.json")
   }
 );
 Chart.defaults.global.elements.line.borderWidth = 1;
-Chart.defaults.global.elements.point.radius = .5;
+Chart.defaults.global.elements.point.radius = 0.5;
 Chart.defaults.global.defaultFontFamily = "Open Sans";
 Chart.defaults.global.legend.onHover = function (e) {
-  e.target.style.cursor = 'pointer'
+  e.target.style.cursor = 'pointer';
 };
 Chart.defaults.global.legend.onLeave = function (e) {
-  e.target.style.cursor = 'default'
-}
+  e.target.style.cursor = 'default';
+};
 Chart.defaults.global.legend.onClick = function (e, legendItem) {
   var index = legendItem.datasetIndex;
   var ci = this.chart;
@@ -465,4 +465,4 @@ Chart.defaults.global.legend.onClick = function (e, legendItem) {
     localStorage.setItem('legendClicked', ++clicks || 1);
     displayInfo();
   }
-}
+};

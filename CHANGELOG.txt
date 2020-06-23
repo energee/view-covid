@@ -1,3 +1,4 @@
+Update June 23 01:28PM - Add Arizona
 Update May 03 08:30PM - Fixed some syntax issues
 Update April 06 09:49AM - Migration Update
 Update April 04 02:22PM - Updated data source

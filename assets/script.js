@@ -189,6 +189,7 @@ let states = [
   "Indiana",
   "Tennessee",
   "Maryland",
+  "Arizona",
   "District of Columbia",
   "Virginia"
 ];
